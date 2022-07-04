@@ -114,7 +114,7 @@ int main()
 	*prho = -0.0023;
 	*pt = 19620927;
 
-	std::cin.clear();
+ 	std::cin.clear();
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::cin.get();
 
