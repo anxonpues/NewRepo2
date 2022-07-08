@@ -9,6 +9,11 @@ void errorHandler(int* errNum)
 		std::cout << "\nNow errNum= 0 and I'm sure you can calm down.  errNum = " << *errNum << std::endl;
 }
 
+const int get_size()
+{
+	return 1;
+}
+
 int main()
 {
 	// lipman Exercise 2.20: What does the following program do ?
@@ -150,14 +155,117 @@ int main()
 
 // Exercise 2.28: Explain the following definitions.Identify any that are illegal.
 // int i, * const cp;   i is not initiallized as cp ang as const ptr must be initiallized at definition time
-int i, val, * const cp = &val;
-// int* p1, * const p2;    same as before a const ptr must be initializad at declared time like that
-int* p1 = nullptr, * const p2 = &val;
-//const int ic, & r = ic;    everything that has const must be initialized at declaration time
-const int ic(99), & r = ic;
-const int* const p3 = &ic; // same as before
-const int* p(nullptr);	//	better with the nullptr 
-		// well let's see it ??
+//int i, val, * const cp = &val;
+//// int* p1, * const p2;    same as before a const ptr must be initializad at declared time like that
+//int* p1 = nullptr, * const p2 = &val;
+///* giving value to val through p2 would change val as is not const */
+//*cp = 27;
+////const int ic, & r = ic;    everything that has const must be initialized at declaration time
+//const int ic(99), & r = ic;
+//const int* const p3 = &ic; // same as before
+//const int* p(nullptr);	//	better with the nullptr 
+//		// well let's see it ?? all worked as expected once corrected
+//
+//// Exercise 2.29: Uing the variables in the previous exercise, which of the
+//// following assignments are legal ? Explain why.
+//i = ic;
+////p1 = p3;		a ptr to an const int can not be assigned to an ptr to an int 
+////p1 = &ic;		a ptr to an const int can not be assigned to an ptr to an int 
+//// p3 = &ic;    p3 is a const ptr  so can not be reasigned 
+////p2 = p1;		p2 is a const ptr  so can not be reasigned 
+//// ic = *p3;	ic is a cont int and can not be an left_val
+
+
+
+// lipman p 101 top and low level of const
+
+int i = 0;
+//int* const p1 = &i; // we can't change the value of p1; const is top-level
+const int ci = 42; // we cannot change ci; const is top-level
+//const int* p2 = &ci; // we can change p2; const is low-level
+//const int* const p3 = p2; // right-most const is top-level, left-most is not
+const int& r = ci; // const in reference types is always low-level
+i = ci; // ok: copying the value of ci; top-level const in ci is ignored
+//p2 = p3; // ok: pointed-to type matches; top-level const in p3 is ignored
+// int *p = p3; // error: p3 has a low-level const but p doesn't
+//p2 = p3; // ok: p2 has the same low-level const qualification as p3
+//p2 = &i; // ok: we can convert int* to const int*
+//int &r = ci; // error: can't bind an ordinary int& to a const int object
+//const int &r2 = i; // ok: can bind const int& to plain int
+
+/*
+		ci	42	const int
+		i	0	int
++		p1	0x000000f50c5af7f4 {0}	int * const
++		p2	0x000000f50c5af834 {42}	const int *
++		p3	0x000000f50c5af834 {42}	const int * const
+		r	42	const int &
+
+		ci	42	const int
+		i	42	int
++		p1	0x000000e3da4ff5f4 {42}	int * const
++		p2	0x000000e3da4ff634 {42}	const int *
++		p3	0x000000e3da4ff634 {42}	const int * const
+		r	42	const int &
+
+
+ 
+ The distinction between top-level and low-level matters when we copy an object.
+ When we copy an object, top - level consts are ignored :
+ 
+ Copying an object doesn’t change the copied object. As a result, it is immaterial
+ On the other hand, low-level const is never ignored. When we copy an object,
+ both objects must have the same low-level const qualification or there must be a
+ conversion between the types of the two objects. In general, we can convert a
+ nonconst to const but not the other way round:
+ whether the object copied from or copied into is const.
+*/
+
+/*
+	Exercise 2.30: For each of the following declarations indicate whether the
+	object being declared has top - level or low - level const.
+*/
+const int v2 = 0;	// v2 is top level
+int v1 = v2;		//  I think v1 here is not cont before stay in same text line with previous but with ; in between
+					// so there were two logical lines at my oppinion
+int* p1 = &v1, & r1 = v1;	// first here has no const so v2 vas top-level and doesn't copy that to v1
+							// same happens with r1 a ref to int doesn't receive const from v2 as that was top-level
+const int* p2 = &v2, * const p3 = &i, & r2 = v2;
+		// p2 can be low-level and receive adress value from v2 that was high-level that is not copied
+		// i was declared as int so no const but this can be p3 a const ptr to a const int initialized with value of address of i
+		// finally r2 is a reference to a cont int and gets the value of a top-level that's not copied looks ok...
+		// let's see how compiles ?
+		// well need to coment previous lines where appear p1 p2 p3 and r
+/*
+		ci	42	const int
+		i	42	int
++		p1	0x000000b3b94ff8f4 {0}	int *
++		p2	0x000000b3b94ff8d4 {0}	const int *
++		p3	0x000000b3b94ff874 {42}	const int * const
+		r	42	const int &
+		r1	0	int &
+		r2	0	const int &
+		v1	0	int
+		v2	0	const int
+*/
+
+/*
+	Exercise 2.31: Given the declarations in the previous exercise determine
+	whether the following assignments are legal.Explain how the top - level or
+	low - level const applies in each case.
+*/
+r1 = v2;		// ilegal a reference can not be reasigned NOT!!!!!   line (224) makes v1 = v2 
+				// so r1 at the end doesn't change value so it's not reasigned anyway
+//p1 = p2;		// ilegal p2 points to a const int   and p1 points to an int    this would be wrong
+p2 = p1;		// p2 points to const int and p1 points to an int  but top level is not copied
+//p1 = p3;		// p1 points to an int and p3 points to a const int low-level so if doesn't fit
+p2 = p3;		// both are low-lewel const and the top-level of p3 isn't copied so it fits
+				// let's see if all works...?
+
+constexpr int max_files = 20; // max_files is a constant expression
+constexpr int limit = max_files + 1; // limit is a constant expression
+int staff_size = 27; // staff_size is not a constant expression
+const int sz = get_size(); // sz is not a constant expression
 
 
 	std::cin.clear(); 
