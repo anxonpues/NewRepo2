@@ -225,12 +225,12 @@ i = ci; // ok: copying the value of ci; top-level const in ci is ignored
 	Exercise 2.30: For each of the following declarations indicate whether the
 	object being declared has top - level or low - level const.
 */
-const int v2 = 0;	// v2 is top level
-int v1 = v2;		//  I think v1 here is not cont before stay in same text line with previous but with ; in between
-					// so there were two logical lines at my oppinion
-int* p1 = &v1, & r1 = v1;	// first here has no const so v2 vas top-level and doesn't copy that to v1
-							// same happens with r1 a ref to int doesn't receive const from v2 as that was top-level
-const int* p2 = &v2, * const p3 = &i, & r2 = v2;
+//const int v2 = 0;	// v2 is top level
+//int v1 = v2;		//  I think v1 here is not cont before stay in same text line with previous but with ; in between
+//					// so there were two logical lines at my oppinion
+//int* p1 = &v1, & r1 = v1;	// first here has no const so v2 vas top-level and doesn't copy that to v1
+//							// same happens with r1 a ref to int doesn't receive const from v2 as that was top-level
+//const int* p2 = &v2, * const p3 = &i, & r2 = v2;
 		// p2 can be low-level and receive adress value from v2 that was high-level that is not copied
 		// i was declared as int so no const but this can be p3 a const ptr to a const int initialized with value of address of i
 		// finally r2 is a reference to a cont int and gets the value of a top-level that's not copied looks ok...
@@ -254,19 +254,20 @@ const int* p2 = &v2, * const p3 = &i, & r2 = v2;
 	whether the following assignments are legal.Explain how the top - level or
 	low - level const applies in each case.
 */
-r1 = v2;		// ilegal a reference can not be reasigned NOT!!!!!   line (224) makes v1 = v2 
-				// so r1 at the end doesn't change value so it's not reasigned anyway
-//p1 = p2;		// ilegal p2 points to a const int   and p1 points to an int    this would be wrong
-p2 = p1;		// p2 points to const int and p1 points to an int  but top level is not copied
-//p1 = p3;		// p1 points to an int and p3 points to a const int low-level so if doesn't fit
-p2 = p3;		// both are low-lewel const and the top-level of p3 isn't copied so it fits
-				// let's see if all works...?
+//r1 = v2;		// ilegal a reference can not be reasigned NOT!!!!!   line (224) makes v1 = v2 
+//				// so r1 at the end doesn't change value so it's not reasigned anyway
+////p1 = p2;		// ilegal p2 points to a const int   and p1 points to an int    this would be wrong
+//p2 = p1;		// p2 points to const int and p1 points to an int  but top level is not copied
+////p1 = p3;		// p1 points to an int and p3 points to a const int low-level so if doesn't fit
+//p2 = p3;		// both are low-lewel const and the top-level of p3 isn't copied so it fits
+//				// let's see if all works...?
+//
+//constexpr int max_files = 20; // max_files is a constant expression
+//constexpr int limit = max_files + 1; // limit is a constant expression
+//int staff_size = 27; // staff_size is not a constant expression
+//const int sz = get_size(); // sz is not a constant expression
 
-constexpr int max_files = 20; // max_files is a constant expression
-constexpr int limit = max_files + 1; // limit is a constant expression
-int staff_size = 27; // staff_size is not a constant expression
-const int sz = get_size(); // sz is not a constant expression
-
+/*  arrives to lipman p 105 */
 
 	std::cin.clear(); 
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
