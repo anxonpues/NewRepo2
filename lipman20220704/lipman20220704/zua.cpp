@@ -1,12 +1,12 @@
 #include <iostream>
 #include <limits>
 
-void errorHandler(int* errNum)
+void errorHandler(int* errNum) 
 {
 	if(*errNum)
 		std::cout << "\nFor same reason errNum != 0 and I need to tell you what happens.  errNum = " << *errNum << std::endl;
 	else
-		std::cout << "\nNow errNum= 0 and I you can calm down.  errNum = " << *errNum << std::endl;
+		std::cout << "\nNow errNum= 0 and I'm sure you can calm down.  errNum = " << *errNum << std::endl;
 }
 
 int main()
@@ -117,22 +117,51 @@ int main()
 	//cptr = &dval; // ok: but can't change dval through cptr
 
 	// lipman p 100 const ptr that can't be changed the address they point
-	int errNumb = 7;
-	int* const curErr = &errNumb; // curErr will always point to errNumb
-	const double pi = 3.14159;
-	const double* const pip = &pi; // pip is a const pointer to a const object
+	//int errNumb = 7;
+	//int* const curErr = &errNumb; // curErr will always point to errNumb
+	//const double pi = 3.14159;
+	//const double* const pip = &pi; // pip is a const pointer to a const object
 
-	// *pip = 2.72; // error: pip is a pointer to const
-				    // if the object to which curErr points (i.e., errNumb) is nonzero
-	if (*curErr) {
-		errorHandler(curErr);
-		*curErr = 0; // ok: reset the value of the object to which curErr is bound
-		errorHandler(curErr);
-	}
+	//// *pip = 2.72; // error: pip is a pointer to const
+	//			    // if the object to which curErr points (i.e., errNumb) is nonzero
+	//if (*curErr) {
+	//	errorHandler(curErr);
+	//	*curErr = 0; // ok: reset the value of the object to which curErr is bound
+	//	errorHandler(curErr);
+	//}
+
+////Exercise 2.27: Which of the following initializations are legal ? Explain why.
+//// int i = -1, &r = 0; ilegal a ref can't be initialized with a non lhv
+//// int* const p2 = &i2; ilegal because i2 is not defined / declared before
+//int i2(0);	// finally initialize it to be more honest
+//int* const p2 = &i2;	// now declared i2 makes the sentence good even if not initialized or defined
+// const int i = -1, & r = 0;		// looks like ok because is a reference to a constant int ???
+//	/*In particular, we can bind a reference to
+//	const to a nonconst object, a literal,
+//	or a more general expression*/
+// const int* const p3 = &i2;		// const ptr to a const int
+// const int* p1 = &i2;			// ptr to a const int initialized with the address of i2 ( still not initialized)
+//// const int& const r2;		// as reference to const int must be initialized at declare time
+// const int& r2 = i2;	// like now but using & const r2 ... is an anachronism
+// // const int i2 = i, & r = i;	// finally i2 is redefined !!! and initialized   maybe it'll crash ad ejecution time ???
+//							// let's see what happens ... also was a redefinition of r !!
+//							// got compile error so can not redefine i2 as const having before int alone ( 137 )
+// const int i3 = i, & ri = i;	// make new variables now all works   would debug line by line to look over variables 
+
+// Exercise 2.28: Explain the following definitions.Identify any that are illegal.
+// int i, * const cp;   i is not initiallized as cp ang as const ptr must be initiallized at definition time
+int i, val, * const cp = &val;
+// int* p1, * const p2;    same as before a const ptr must be initializad at declared time like that
+int* p1 = nullptr, * const p2 = &val;
+//const int ic, & r = ic;    everything that has const must be initialized at declaration time
+const int ic(99), & r = ic;
+const int* const p3 = &ic; // same as before
+const int* p(nullptr);	//	better with the nullptr 
+		// well let's see it ??
+
 
 	std::cin.clear(); 
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
 
 	std::cin.get();
 
