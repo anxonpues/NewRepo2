@@ -1,6 +1,14 @@
 #include <iostream>
 #include <limits>
 
+void errorHandler(int* errNum)
+{
+	if(*errNum)
+		std::cout << "\nFor same reason errNum != 0 and I need to tell you what happens.  errNum = " << *errNum << std::endl;
+	else
+		std::cout << "\nNow errNum= 0 and I you can calm down.  errNum = " << *errNum << std::endl;
+}
+
 int main()
 {
 	// lipman Exercise 2.20: What does the following program do ?
@@ -80,19 +88,53 @@ int main()
 	//r1 = 42; // error: r1 is a reference to const
 	//int& r2 = ci; // error: non const reference to a const object
 
-	int i = 42;
-	const int& r1 = i; // we can bind a const int& to a plain int object
-	const int& r2 = 42; // ok: r1 is a reference to const
-	const int& r3 = r1 * 2; // ok: r3 is a reference to const
-	//int& r4 = r * 2; // error: r4 is a plain, non const reference, r is not defined
-	int r = -7;
-	int& r4 = r; // only a legal lvalue can be initializer of a ref
-	r4 = -r + i;	// as neither i or r are const, specially r
+	//int i = 42;
+	//const int& r1 = i; // we can bind a const int& to a plain int object
+	//const int& r2 = 42; // ok: r1 is a reference to const
+	//const int& r3 = r1 * 2; // ok: r3 is a reference to const
+	////int& r4 = r * 2; // error: r4 is a plain, non const reference, r is not defined
+	//int r = -7;
+	//int& r4 = r; // only a legal lvalue can be initializer of a ref
+	//r4 = -r + i;	// as neither i or r are const, specially r
 
-	//// lipman p97
-	//std::cin.clear(); 
-	//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	//std::cin.get();
+	/* when use a const in more than one file, as const can't be asigned a value once, both in declaration and definition
+	must be preceded by extern because linker needs to know that is used or defined in another file */
+
+	// lipman p 98 const references make the reference blocked to change the value
+	//int i = 42;
+	//int& r1 = i; // r1 bound to i
+	//const int& r2 = i; // r2 also bound to i; but cannot be used to change i
+	//r1 = 0; // r1 is not const; i is now 0
+	//// r2 = 0; // error: r2 is a reference to const
+
+	//// lipman 99 pointer to const that can't change de value they point
+	//const double pi = 3.14; // pi is const; its value may not be changed
+	//// double* ptr = &pi; // error: ptr is a plain pointer
+	//const double* cptr = &pi; // ok: cptr may point to a double that is const
+	//// *cptr = 42; // error: cannot assign to *cptr
+
+	//double dval = 3.14; // dval is a double; its value can be changed
+	//cptr = &dval; // ok: but can't change dval through cptr
+
+	// lipman p 100 const ptr that can't be changed the address they point
+	int errNumb = 7;
+	int* const curErr = &errNumb; // curErr will always point to errNumb
+	const double pi = 3.14159;
+	const double* const pip = &pi; // pip is a const pointer to a const object
+
+	// *pip = 2.72; // error: pip is a pointer to const
+				    // if the object to which curErr points (i.e., errNumb) is nonzero
+	if (*curErr) {
+		errorHandler(curErr);
+		*curErr = 0; // ok: reset the value of the object to which curErr is bound
+		errorHandler(curErr);
+	}
+
+	std::cin.clear(); 
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+
+	std::cin.get();
 
 	return 19550608;
 
